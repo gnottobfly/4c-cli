@@ -75,6 +75,11 @@ export function builder(_) {
         default: true,
         describe: 'When compiling a directory copy over non-compilable files',
       })
+      .option('source-maps', {
+        type: 'boolean',
+        default: false,
+        describe: 'Generate javascript source maps'
+      })
       // so we can pass anything after -- to babel
       .parserConfiguration({
         'populate--': true,
@@ -118,6 +123,7 @@ export async function handler({
   onlyTypes,
   extensions,
   copyFiles,
+  sourceMaps,
   '--': passthrough,
   ...options
 }) {
@@ -216,6 +222,7 @@ export async function handler({
                     clean && safeToDelete(outDir) && '--delete-dir-on-start',
                     '-x',
                     extensions.join(','),
+                    sourceMaps && '--sourceMaps=true'
                   ]),
               },
               {
@@ -250,6 +257,8 @@ export async function handler({
                   'esm',
                   '-x',
                   extensions.join(','),
+                  '--sourceMaps',
+                  'true'
                 ]),
             },
             {
